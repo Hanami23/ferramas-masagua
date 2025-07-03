@@ -12,7 +12,7 @@ Documento de identidad
 (otro) 123456789 
 
 
-Estado de pago	Descripción	
+nombre de tarjeta	Descripción	
 -
 APRO  Pago aprobado
 -
