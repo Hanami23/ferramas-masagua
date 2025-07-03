@@ -13,24 +13,19 @@ Documento de identidad
 
 
 Estado de pago	Descripción	
-APRO
-Pago aprobado
-OTHE
-Rechazado por error general
-CONT
-Pendiente de pago
 -
-CALL
-Rechazado con validación para autorizar
+APRO  Pago aprobado
 -
-FUND
-Rechazado por importe insuficiente
+OTHE Rechazado por error general
 -
-SECU
-Rechazado por código de seguridad inválido
+CONT Pendiente de pago
 -
-EXPI
-Rechazado debido a un problema de fecha de vencimiento
+CALL Rechazado con validación para autorizar
 -
-FORM
-Rechazado debido a un error de formulario
+FUND Rechazado por importe insuficiente
+-
+SECU Rechazado por código de seguridad inválido
+-
+EXPI Rechazado debido a un problema de fecha de vencimiento
+-
+FORM Rechazado debido a un error de formulario
