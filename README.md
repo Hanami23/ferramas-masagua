@@ -1,5 +1,5 @@
-# ferramas-masagua
- ngrok http --url=welcome-grubworm-closely.ngrok-free.app 80  url 
+# ferramas-masagua  
+ url:  ngrok http --url=welcome-grubworm-closely.ngrok-free.app 8000
 
 Access Token
 TEST-5620329214983463-070223-a0dfe89354f273abf1a18098ef40fa21-1262225673
