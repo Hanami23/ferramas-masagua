@@ -1,0 +1,11 @@
+{% extends "base.html" %} 
+
+{% block title %} Pago Fallido {% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="text-align: center;">
+    <h2>El pago no pudo completarse</h2>
+    <a href="{% url 'catalogo' %}">Volver al carrito</a>
+</div>
+
+{% endblock %}

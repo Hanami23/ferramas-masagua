@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    {% load static %}
+    {% load user_tags %}  
+     <link rel="website icon" type="png" href="{% static 'img/gotadeagua.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Barra de navegación -->
+{% if user.is_authenticated %}
+  {% if user.is_staff %}
+    <!-- NAV para Admin -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'catalogo' %}">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'Pedidos_Activos' %}">Pedidos Activos / ventas</a></li>
+          <li class="nav-item"><a class="nav-link text-white">Perfil: {{ user.username }}</a></li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="nav-link text-white btn btn-link" style="padding: 0; border: none; background: none;">Cerrar sesión</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+  {% elif user|has_group:"transportista" %}
+    <!-- NAV para Transportista -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'catalogo' %}">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'panel_transportista' %}">Panel Transportista</a></li>
+          <li class="nav-item"><a class="nav-link text-white">Perfil: {{ user.username }}</a></li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="nav-link text-white btn btn-link" style="padding: 0; border: none; background: none;">Cerrar sesión</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+  {% else %}
+    <!-- NAV para Cliente autenticado -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active bg-white text-primary" href="{% url 'catalogo' %}">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Mis Pedidos</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'seguimiento' %}">Seguimiento</a></li>
+          <li class="nav-item"><a class="nav-link text-white">Perfil: {{ user.username }}</a></li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="nav-link text-white btn btn-link" style="padding: 0; border: none; background: none;">Cerrar sesión</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  {% endif %}
+
+{% else %}
+  <!-- NAV para usuario NO autenticado -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link active bg-white text-white" href="{% url 'catalogo' %}">Catálogo</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{% url 'login' %}">Ingresar</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endif %}
+
+  <!-- Encabezado -->
+  <header class="bg-primary text-white text-center py-4">
+    <h1 class="display-5">Bienvenido a H2O CONTOL</h1>
+    <p class="lead">Del equipo de MasAgua-SPA</p>
+  </header>
+
+  <!-- Contenido principal -->
+  <div class="container my-5">
+    <div class="row gy-4">
+
+      <!-- Nueva solicitud -->
+      <div class="col-md-12">
+        <div class="card p-4 shadow-sm">
+          <h4>Realizar un nuevo pedido</h4>
+          <p>Selecciona el tipo de agua y cantidad que deseas solicitar.</p>
+          <a href="catalogo" class="btn btn-primary">Ir al Catálogo</a>
+        </div>
+      </div>
+
+      <!-- Pedidos recientes -->
+      <div class="col-md-12">
+        <div class="card p-4 shadow-sm">
+          <h4>Mis pedidos recientes</h4>
+          <ul>
+            <li>Pedido #12345 – <span class="text-success">Entregado</span></li>
+            <li>Pedido #12346 – <span class="text-warning">En camino</span></li>
+          </ul>
+          <a href="#" class="btn btn-outline-primary">Ver historial completo</a>
+        </div>
+      </div>
+
+      <!-- Seguimiento -->
+      <div class="col-md-12">
+        <div class="card p-4 shadow-sm">
+          <h4>Seguimiento en tiempo real</h4>
+          <p>Revisa el estado actual de tu próximo pedido.</p>
+          <a href="seguimiento" class="btn btn-primary">Ver mapa</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

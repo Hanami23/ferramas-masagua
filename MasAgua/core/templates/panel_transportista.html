@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>🚚 Panel del Transportista</h2>
+  <table class="table table-striped mt-4">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for boleta in boletas %}
+      <tr>
+        <td>{{ boleta.id }}</td>
+        <td>{{ boleta.usuario.username }}</td>
+        <td>{{ boleta.fecha }}</td>
+        <td>${{ boleta.total }}</td>
+        <td>{{ boleta.get_estado_entrega_display }}</td>
+        <td>
+          {% if boleta.estado_entrega != 'entregado' %}
+          <form action="{% url 'marcar_entregado' boleta.id %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-success btn-sm" type="submit">Marcar como entregado</button>
+          </form>
+          {% else %}
+          <span class="badge bg-success">Entregado</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

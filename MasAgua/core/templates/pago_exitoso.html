@@ -1,0 +1,12 @@
+{% extends "base.html" %} 
+
+{% block title %} Pago exitoso {% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="text-align: center;">
+    <h2>Pago realizado con éxito</h2>
+    <p>Total: ${{ boleta.total }}</p>
+    <a href="{% url 'catalogo' %}">Volver al catálogo</a>
+</div>
+
+{% endblock %}

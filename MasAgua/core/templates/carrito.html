@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito - H2O CONTOL</title>
+   {% load static %}
+  {% load user_tags %}
+  <link rel="website icon" type="png" href="{% static 'img/gotadeagua.png' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<!-- Barra de navegación -->
+{% if user.is_authenticated %}
+  {% if user.is_staff %}
+    <!-- NAV para Admin -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'catalogo' %}">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'Pedidos_Activos' %}">Pedidos Activos / ventas</a></li>
+          <li class="nav-item"><a class="nav-link text-white">Perfil: {{ user.username }}</a></li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="nav-link text-white btn btn-link" style="padding: 0; border: none; background: none;">Cerrar sesión</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+  {% elif user|has_group:"transportista" %}
+    <!-- NAV para Transportista -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'catalogo' %}">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'panel_transportista' %}">Panel Transportista</a></li>
+          <li class="nav-item"><a class="nav-link text-white">Perfil: {{ user.username }}</a></li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="nav-link text-white btn btn-link" style="padding: 0; border: none; background: none;">Cerrar sesión</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+  {% else %}
+    <!-- NAV para Cliente autenticado -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active bg-white text-primary" href="{% url 'catalogo' %}">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Mis Pedidos</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'seguimiento' %}">Seguimiento</a></li>
+          <li class="nav-item"><a class="nav-link text-white">Perfil: {{ user.username }}</a></li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="nav-link text-white btn btn-link" style="padding: 0; border: none; background: none;">Cerrar sesión</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  {% endif %}
+
+{% else %}
+  <!-- NAV para usuario NO autenticado -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white fw-bold" href="#">FERREMAS</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link active bg-white text-white" href="{% url 'catalogo' %}">Catálogo</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{% url 'login' %}">Ingresar</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endif %}
+
+  <div class="container mt-5">
+    <h3 class="mb-4">🛒 Mi Carrito</h3>
+
+    {% if productos %}
+    <div class="row">
+      {% for item in productos %}
+      <div class="col-md-6">
+        <div class="card mb-4 shadow-sm">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img src="{{ item.producto.imagen.url }}" class="img-fluid rounded-start" alt="{{ item.producto.nombre }}">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ item.producto.nombre }}</h5>
+                <p class="card-text mb-1">💲 Precio unitario: ${{ item.producto.precio }}</p>
+                <p class="card-text mb-1">📦 Cantidad: <strong id="cantidad-{{ item.producto.id }}">{{ item.cantidad }}</strong></p>
+                <p class="card-text">🔢 Subtotal: $<span id="subtotal-{{ item.producto.id }}">{{ item.subtotal }}</span></p>
+
+                <div class="btn-group mt-2" role="group">
+                  <button class="btn btn-outline-success btn-sm modificar-cantidad" data-producto-id="{{ item.producto.id }}" data-accion="sumar">+</button>
+                  <button class="btn btn-outline-warning btn-sm modificar-cantidad" data-producto-id="{{ item.producto.id }}" data-accion="restar">-</button>
+                  <form method="POST" action="{% url 'eliminar_del_carrito' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="producto_id" value="{{ item.producto.id }}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">🗑️</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-end">
+      <h5 class="fw-bold">Total: $<span id="total">{{ total }}</span></h5>
+      <form action="{% url 'pagar' %}" method="post">
+        {% csrf_token %}
+    <button type="submit" class="btn btn-success">💳 Pagar</button>
+</form>
+    </div>
+
+    {% else %}
+      <div class="alert alert-info">Tu carrito está vacío.</div>
+    {% endif %}
+  </div>
+
+
+  <!-- JavaScript de Bootstrap + lógica de botones -->
+   <script src="{% static 'js/carrito.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
